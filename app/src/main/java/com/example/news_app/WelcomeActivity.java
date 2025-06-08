@@ -19,11 +19,12 @@ public class WelcomeActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         btnSignup = findViewById(R.id.btnSignup);
 
+
         // Navigate to LoginActivity
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+                startActivity(new Intent(WelcomeActivity.this, SignInActivity.class));
             }
         });
 
@@ -31,7 +32,7 @@ public class WelcomeActivity extends AppCompatActivity {
         btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+                startActivity(new Intent(WelcomeActivity.this, SignUpActivity.class));
             }
         });
     }

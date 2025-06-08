@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#111111">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Logo Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="20dp">
+
+            <ImageView
+                android:id="@+id/logoImage"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:contentDescription="App Logo"
+                android:src="@drawable/logo" />
+
+            <ImageView
+                android:id="@+id/logoTextImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:contentDescription="Logo Text"
+                android:src="@drawable/text" />
+        </LinearLayout>
+
+        <!-- Form Fields -->
+        <EditText
+            android:id="@+id/editUsername"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:hint="Username"
+            android:textColor="#000000"
+            android:textColorHint="#AAAAAA"
+            android:background="@drawable/edittext_background"
+            android:padding="12dp"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/editEmail"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:hint="Email"
+            android:textColor="#000000"
+            android:textColorHint="#AAAAAA"
+            android:background="@drawable/edittext_background"
+            android:padding="12dp"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/editPassword"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:hint="Password"
+            android:textColor="#000000"
+            android:textColorHint="#AAAAAA"
+            android:background="@drawable/edittext_background"
+            android:padding="12dp"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/editConfirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:hint="Confirm Password"
+            android:textColor="#000000"
+            android:textColorHint="#AAAAAA"
+            android:background="@drawable/edittext_background"
+            android:padding="12dp"
+            android:inputType="textPassword" />
+
+        <!-- Sign Up Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@null"
+            android:text="Create Account"
+            android:textColor="#FFFFFF" />
+
+        <!-- Already have account text -->
+        <TextView
+            android:id="@+id/textLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:text="Already Have Account?"
+            android:textColor="#D32F2F"
+            android:textSize="14sp"
+            android:fontFamily="@font/inria_serif"
+            android:textStyle="normal" />
+
+    </LinearLayout>
+</ScrollView>
