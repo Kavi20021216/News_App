@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background">
+
+
+    <!-- App Logo Image -->
+    <ImageView
+        android:id="@+id/logoImage"
+        android:layout_width="185dp"
+        android:layout_height="156dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="188dp"
+        android:contentDescription="App Logo"
+        android:src="@drawable/logo" />
+
+    <!-- Logo Text as Image -->
+    <ImageView
+        android:id="@+id/logoTextImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logoImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:contentDescription="Logo Text Image"
+        android:src="@drawable/text" />
+</RelativeLayout>
