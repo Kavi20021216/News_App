@@ -3,7 +3,6 @@ package com.example.news_app;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -33,7 +32,7 @@ public class SignInActivity extends Activity {
         btnSignIn = findViewById(R.id.btnSignIn);
         descText = findViewById(R.id.descText);
 
-        // Firebase reference to users node
+        // Firebase reference to "users" node
         usersRef = FirebaseDatabase.getInstance().getReference("users");
 
         btnSignIn.setOnClickListener(view -> {
@@ -47,7 +46,7 @@ public class SignInActivity extends Activity {
             }
         });
 
-        // Navigate to signup screen
+        // Navigate to SignUpActivity
         descText.setOnClickListener(v -> {
             startActivity(new Intent(SignInActivity.this, SignUpActivity.class));
             finish();
@@ -72,7 +71,11 @@ public class SignInActivity extends Activity {
 
                 if (found) {
                     Toast.makeText(SignInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                    // Navigate to home or dashboard if needed
+
+                    // ✅ Navigate to HomeActivity
+                    Intent intent = new Intent(SignInActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                    finish(); // Finish login activity so it can't be returned to
                 } else {
                     Toast.makeText(SignInActivity.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
                 }
