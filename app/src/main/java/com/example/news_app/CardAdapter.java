@@ -1,6 +1,7 @@
 package com.example.news_app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -34,13 +35,11 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     public void onBindViewHolder(CardViewHolder holder, int position) {
         CardItem item = itemList.get(position);
 
-        holder.title.setText(item.getTitle());
+        holder.title.setText(item.getHeadline());
 
-        // Decode base64 image
-        String base64Image = item.getBase64Image();
+        String base64Image = item.getImage();
         if (base64Image != null && !base64Image.isEmpty()) {
             try {
-                // Remove the "data:image/..." prefix if present
                 if (base64Image.contains(",")) {
                     base64Image = base64Image.split(",")[1];
                 }
@@ -49,17 +48,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
                 holder.image.setImageBitmap(bitmap);
             } catch (Exception e) {
                 e.printStackTrace();
-                holder.image.setImageResource(R.drawable.news_image1); // fallback image
+                holder.image.setImageResource(R.drawable.news_image1);
             }
         } else {
-            holder.image.setImageResource(R.drawable.news_image1); // fallback image
+            holder.image.setImageResource(R.drawable.news_image1);
         }
 
-        // Optional: set click listener for "Read more..."
-        holder.readMore.setOnClickListener(v -> {
-            // You can implement opening a detailed view or Toast here
-            // Toast.makeText(context, "Read more: " + item.getTitle(), Toast.LENGTH_SHORT).show();
-        });
+        holder.itemView.setOnClickListener(v -> openNewsDetail(item));
+        holder.readMore.setOnClickListener(v -> openNewsDetail(item));
     }
 
     @Override
@@ -75,7 +71,17 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             super(itemView);
             image = itemView.findViewById(R.id.imageCard);
             title = itemView.findViewById(R.id.titleCard);
-            readMore = itemView.findViewById(R.id.readMoreText); // added binding for Read more...
+            readMore = itemView.findViewById(R.id.readMoreText);
         }
+    }
+
+    private void openNewsDetail(CardItem item) {
+        Intent intent = new Intent(context, NewsViewActivity.class);
+        intent.putExtra("title", item.getHeadline());
+        intent.putExtra("image", item.getImage());
+        intent.putExtra("description", item.getDescription());
+        intent.putExtra("date", item.getDate());
+        intent.putExtra("category", item.getCategory());
+        context.startActivity(intent);
     }
 }

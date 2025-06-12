@@ -1,11 +1,11 @@
 package com.example.news_app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,107 +25,111 @@ import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
-    TextView welcomeText;
-    EditText searchBar;
-    ImageView searchIcon;
-    RecyclerView recyclerView;
-    BottomNavigationView bottomNavigationView;
-    CardAdapter adapter;
-    List<CardItem> itemList;
-    List<CardItem> allItems;
+    private RecyclerView recyclerView;
+    private CardAdapter cardAdapter;
+    private List<CardItem> allItems = new ArrayList<>();
+    private List<CardItem> filteredItems = new ArrayList<>();
+    private EditText searchBar;
+    private String currentCategory = "Sports";
 
-    String selectedCategory = "Sports"; // Default to Sports
-
-    DatabaseReference newsRef;
+    private ImageView developerIcon, userIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        welcomeText = findViewById(R.id.welcomeText);
-        searchBar = findViewById(R.id.searchBar);
-        searchIcon = findViewById(R.id.searchIcon);
         recyclerView = findViewById(R.id.recyclerView);
-        bottomNavigationView = findViewById(R.id.bottomNav);
-
-        String username = getIntent().getStringExtra("username");
-        welcomeText.setText(username != null && !username.isEmpty() ? "Hi, " + username : "Hi, User");
+        searchBar = findViewById(R.id.searchBar);
+        developerIcon = findViewById(R.id.developerIcon);
+        userIcon = findViewById(R.id.userIcon);
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        itemList = new ArrayList<>();
-        allItems = new ArrayList<>();
-        adapter = new CardAdapter(itemList, this);
-        recyclerView.setAdapter(adapter);
+        cardAdapter = new CardAdapter(filteredItems, this);
+        recyclerView.setAdapter(cardAdapter);
 
-        newsRef = FirebaseDatabase.getInstance().getReference("news");
-        fetchNewsFromFirebase(); // 🔄 This will show only "Sports" initially
+        fetchNewsFromFirebase();
+
+        bottomNav.setSelectedItemId(R.id.nav_sports);
+        bottomNav.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull android.view.MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.nav_sports) {
+                    setCategory("Sports");
+                    return true;
+                } else if (id == R.id.nav_academic) {
+                    setCategory("Academic");
+                    return true;
+                } else if (id == R.id.nav_events) {
+                    setCategory("Events");
+                    return true;
+                }
+                return false;
+            }
+        });
+
 
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void afterTextChanged(Editable s) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
                 filterNews(s.toString());
             }
+            @Override public void afterTextChanged(Editable s) {}
         });
 
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.nav_sports) {
-                selectedCategory = "Sports";
-            } else if (id == R.id.nav_academic) {
-                selectedCategory = "Academic";
-            } else if (id == R.id.nav_events) {
-                selectedCategory = "Events";
-            }
-            filterNews(searchBar.getText().toString());
-            return true;
+        developerIcon.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+            startActivity(intent);
         });
 
-        // Programmatically select Sports tab on load
-        bottomNavigationView.setSelectedItemId(R.id.nav_sports);
+        userIcon.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+            startActivity(intent);
+        });
+    }
+
+    private void setCategory(String category) {
+        currentCategory = category;
+        filterNews(searchBar.getText().toString());
     }
 
     private void fetchNewsFromFirebase() {
-        newsRef.addValueEventListener(new ValueEventListener() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("news");
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 allItems.clear();
-                for (DataSnapshot newsSnapshot : snapshot.getChildren()) {
-                    String title = newsSnapshot.child("headline").getValue(String.class);
-                    String base64Image = newsSnapshot.child("image").getValue(String.class);
-                    String category = newsSnapshot.child("category").getValue(String.class);
-
-                    if (title != null && base64Image != null && category != null) {
-                        CardItem item = new CardItem();
-                        item.setTitle(title);
-                        item.setBase64Image(base64Image);
-                        item.setCategory(category);
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    CardItem item = data.getValue(CardItem.class);
+                    if (item != null) {
                         allItems.add(item);
                     }
                 }
-                filterNews(searchBar.getText().toString()); // 🔍 Filter after fetching
+                filterNews(searchBar.getText().toString());
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(HomeActivity.this, "Failed to load news: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomeActivity.this, "Failed to load news.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void filterNews(String query) {
-        query = query.toLowerCase().trim();
-        itemList.clear();
-
+        filteredItems.clear();
         for (CardItem item : allItems) {
-            boolean matchesCategory = selectedCategory.equals("All") || item.getCategory().equalsIgnoreCase(selectedCategory);
-            boolean matchesQuery = query.isEmpty() || (item.getTitle() != null && item.getTitle().toLowerCase().contains(query));
+            if (item == null || item.getCategory() == null || item.getHeadline() == null) {
+                continue;
+            }
+            boolean matchesCategory = item.getCategory().equalsIgnoreCase(currentCategory);
+            boolean matchesQuery = item.getHeadline().toLowerCase().contains(query.toLowerCase());
 
             if (matchesCategory && matchesQuery) {
-                itemList.add(item);
+                filteredItems.add(item);
             }
         }
-        adapter.notifyDataSetChanged();
+        cardAdapter.notifyDataSetChanged();
     }
 }
