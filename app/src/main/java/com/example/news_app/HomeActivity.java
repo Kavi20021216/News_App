@@ -80,7 +80,7 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         developerIcon.setOnClickListener(v -> {
-            Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+            Intent intent = new Intent(HomeActivity.this, DeveloperInfoActivity.class);
             startActivity(intent);
         });
 
