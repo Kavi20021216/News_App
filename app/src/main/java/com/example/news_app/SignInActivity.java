@@ -12,12 +12,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import com.google.firebase.database.ValueEventListener;
 
 public class SignInActivity extends Activity {
 
-    EditText editEmail, editPassword;
+    EditText editUsername, editPassword;
     Button btnSignIn;
     TextView descText;
     DatabaseReference usersRef;
@@ -27,57 +26,52 @@ public class SignInActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
 
-        editEmail = findViewById(R.id.editEmail);
+        editUsername = findViewById(R.id.editEmail); // used for username input
         editPassword = findViewById(R.id.editPassword);
         btnSignIn = findViewById(R.id.btnSignIn);
         descText = findViewById(R.id.descText);
 
-        // Firebase reference to "users" node
         usersRef = FirebaseDatabase.getInstance().getReference("users");
 
         btnSignIn.setOnClickListener(view -> {
-            String email = editEmail.getText().toString().trim();
+            String username = editUsername.getText().toString().trim();
             String password = editPassword.getText().toString().trim();
 
-            if (email.isEmpty() || password.isEmpty()) {
+            if (username.isEmpty() || password.isEmpty()) {
                 Toast.makeText(SignInActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             } else {
-                validateUser(email, password);
+                validateUser(username, password);
             }
         });
 
-        // Navigate to SignUpActivity
         descText.setOnClickListener(v -> {
             startActivity(new Intent(SignInActivity.this, SignUpActivity.class));
             finish();
         });
     }
 
-    private void validateUser(String email, String password) {
-        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+    private void validateUser(String username, String password) {
+        usersRef.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                boolean found = false;
+                if (snapshot.exists()) {
+                    String dbPassword = snapshot.child("password").getValue(String.class);
+                    if (dbPassword != null && dbPassword.equals(password)) {
 
-                for (DataSnapshot user : snapshot.getChildren()) {
-                    String dbEmail = user.child("email").getValue(String.class);
-                    String dbPassword = user.child("password").getValue(String.class);
+                        //  Save logged-in username to SharedPreferences
+                        getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
+                                .edit()
+                                .putString("loggedInUsername", username)
+                                .apply();
 
-                    if (email.equals(dbEmail) && password.equals(dbPassword)) {
-                        found = true;
-                        break;
+                        Toast.makeText(SignInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(SignInActivity.this, HomeActivity.class));
+                        finish();
+                    } else {
+                        Toast.makeText(SignInActivity.this, "Incorrect password", Toast.LENGTH_SHORT).show();
                     }
-                }
-
-                if (found) {
-                    Toast.makeText(SignInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-
-                    // ✅ Navigate to HomeActivity
-                    Intent intent = new Intent(SignInActivity.this, HomeActivity.class);
-                    startActivity(intent);
-                    finish(); // Finish login activity so it can't be returned to
                 } else {
-                    Toast.makeText(SignInActivity.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignInActivity.this, "Username not found", Toast.LENGTH_SHORT).show();
                 }
             }
 
