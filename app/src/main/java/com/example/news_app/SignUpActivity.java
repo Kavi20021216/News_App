@@ -39,7 +39,7 @@ public class SignUpActivity extends Activity {
                 Toast.makeText(SignUpActivity.this, "Passwords don't match", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(SignUpActivity.this, "Account created successfully", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                startActivity(new Intent(SignUpActivity.this, SignInActivity.class));
                 finish();
             }
         });
