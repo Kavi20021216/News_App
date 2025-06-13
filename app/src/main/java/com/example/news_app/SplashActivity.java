@@ -14,12 +14,6 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        // Delay 3 seconds and move to MainActivity
-        /**new Handler().postDelayed(() -> {
-            Intent intent = new Intent(SplashActivity.this, WelcomeActivity.class);
-            startActivity(intent);
-            finish(); // close splash
-        }, 3000); // 3 seconds*/
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             startActivity(new Intent(SplashActivity.this, WelcomeActivity.class));

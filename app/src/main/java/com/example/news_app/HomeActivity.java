@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,7 @@ public class HomeActivity extends AppCompatActivity {
     private String currentCategory = "Sports";
 
     private ImageView developerIcon, userIcon;
+    private TextView welcomeText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class HomeActivity extends AppCompatActivity {
         searchBar = findViewById(R.id.searchBar);
         developerIcon = findViewById(R.id.developerIcon);
         userIcon = findViewById(R.id.userIcon);
+        welcomeText = findViewById(R.id.welcomeText);
         BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -52,24 +55,20 @@ public class HomeActivity extends AppCompatActivity {
         fetchNewsFromFirebase();
 
         bottomNav.setSelectedItemId(R.id.nav_sports);
-        bottomNav.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull android.view.MenuItem item) {
-                int id = item.getItemId();
-                if (id == R.id.nav_sports) {
-                    setCategory("Sports");
-                    return true;
-                } else if (id == R.id.nav_academic) {
-                    setCategory("Academic");
-                    return true;
-                } else if (id == R.id.nav_events) {
-                    setCategory("Events");
-                    return true;
-                }
-                return false;
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_sports) {
+                setCategory("Sports");
+                return true;
+            } else if (id == R.id.nav_academic) {
+                setCategory("Academic");
+                return true;
+            } else if (id == R.id.nav_events) {
+                setCategory("Events");
+                return true;
             }
+            return false;
         });
-
 
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -88,6 +87,15 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(HomeActivity.this, UserProfileActivity.class);
             startActivity(intent);
         });
+
+        //  Set welcome text with capitalized username
+        String username = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
+                .getString("loggedInUsername", "User");
+
+        if (!username.isEmpty()) {
+            String displayName = username.substring(0, 1).toUpperCase() + username.substring(1).toLowerCase();
+            welcomeText.setText("Hi, " + displayName + "!");
+        }
     }
 
     private void setCategory(String category) {

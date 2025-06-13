@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/background">
 
-
     <!-- App Logo Image -->
     <ImageView
         android:id="@+id/logoImage"
@@ -15,14 +14,31 @@
         android:contentDescription="App Logo"
         android:src="@drawable/logo" />
 
-    <!-- Logo Text as Image -->
-    <ImageView
-        android:id="@+id/logoTextImage"
+    <!-- App Name Text -->
+    <TextView
+        android:id="@+id/appName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/logoImage"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:contentDescription="Logo Text Image"
-        android:src="@drawable/text" />
+        android:layout_marginTop="24dp"
+        android:text="UpdateXpress"
+        android:textColor="#D32F2F"
+        android:textSize="48sp"
+        android:fontFamily="@font/kaisei_harunoumi_regular"
+        android:textStyle="normal" />
+
+    <!-- Subtitle Text -->
+    <TextView
+        android:id="@+id/tagline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="6dp"
+        android:text="Stay Ahead with UpdateXpress."
+        android:textColor="#D32F2F"
+        android:textSize="16sp"
+        android:fontFamily="@font/inria_serif_bold"
+        android:textStyle="bold" />
 </RelativeLayout>

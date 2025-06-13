@@ -26,7 +26,7 @@ public class SignInActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
 
- 
+        editUsername = findViewById(R.id.editEmail); // used for username input
         editPassword = findViewById(R.id.editPassword);
         btnSignIn = findViewById(R.id.btnSignIn);
         descText = findViewById(R.id.descText);
@@ -58,7 +58,12 @@ public class SignInActivity extends Activity {
                     String dbPassword = snapshot.child("password").getValue(String.class);
                     if (dbPassword != null && dbPassword.equals(password)) {
 
-                
+                        //  Save logged-in username to SharedPreferences
+                        getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
+                                .edit()
+                                .putString("loggedInUsername", username)
+                                .apply();
+
                         Toast.makeText(SignInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(SignInActivity.this, HomeActivity.class));
                         finish();
