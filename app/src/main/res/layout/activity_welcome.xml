@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#111111">
+
+    <!-- App Logo Image -->
+    <ImageView
+        android:id="@+id/logoImage"
+        android:layout_width="185dp"
+        android:layout_height="156dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="120dp"
+        android:contentDescription="App Logo"
+        android:src="@drawable/logo" />
+
+    <!-- App Name Text -->
+    <TextView
+        android:id="@+id/appName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logoImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="UpdateXpress"
+        android:textColor="#D32F2F"
+        android:textSize="48sp"
+        android:fontFamily="@font/kaisei_harunoumi_regular"
+        android:textStyle="normal" />
+
+    <!-- Tagline -->
+    <TextView
+        android:id="@+id/tagline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="6dp"
+        android:text="Stay Ahead with UpdateXpress."
+        android:textColor="#D32F2F"
+        android:textSize="16sp"
+        android:fontFamily="@font/inria_serif_bold"
+        android:textStyle="bold" />
+
+    <!-- Group container for description + buttons -->
+    <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- Button Hint -->
+        <TextView
+            android:id="@+id/descText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log in and catch every headline"
+            android:textColor="#D32F2F"
+            android:textSize="14sp"
+            android:fontFamily="@font/inria_serif"
+            android:textStyle="normal"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Login Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnLogin"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@null"
+            android:text="Login"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Sign Up Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSignup"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@null"
+            android:text="Sign up"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
+</RelativeLayout>

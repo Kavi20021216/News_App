@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#111111">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
+
+        <!-- Logo Image -->
+        <ImageView
+            android:id="@+id/logoImage"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_marginTop="40dp"
+            android:contentDescription="App Logo"
+            android:src="@drawable/logo" />
+
+        <!-- App Name Text -->
+        <TextView
+            android:id="@+id/appName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UpdateXpress"
+            android:textColor="#D32F2F"
+            android:textSize="42sp"
+            android:fontFamily="@font/kaisei_harunoumi_regular"
+            android:layout_marginTop="12dp" />
+
+        <!-- Tagline -->
+        <TextView
+            android:id="@+id/tagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stay Ahead with UpdateXpress."
+            android:textColor="#D32F2F"
+            android:textSize="18sp"
+            android:fontFamily="@font/inria_serif_bold"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp" />
+
+        <!-- Username Field -->
+        <EditText
+            android:id="@+id/editEmail"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="36dp"
+            android:hint="User Name"
+            android:textColor="#000000"
+            android:textColorHint="#888888"
+            android:background="@drawable/edittext_background"
+            android:padding="12dp"
+            android:inputType="text" />
+
+        <!-- Password Field -->
+        <EditText
+            android:id="@+id/editPassword"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:hint="Password"
+            android:textColor="#000000"
+            android:textColorHint="#888888"
+            android:background="@drawable/edittext_background"
+            android:padding="12dp"
+            android:inputType="textPassword" />
+
+        <!-- Login Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSignIn"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@null"
+            android:text="LOGIN"
+            android:textColor="#FFFFFF"
+            android:textAllCaps="false" />
+
+        <!-- Redirect to Sign Up -->
+        <TextView
+            android:id="@+id/descText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Don't Have Account?"
+            android:textColor="#D32F2F"
+            android:textSize="14sp"
+            android:fontFamily="@font/inria_serif"
+            android:textStyle="normal" />
+
+    </LinearLayout>
+</ScrollView>
