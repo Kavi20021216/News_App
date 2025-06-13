@@ -56,7 +56,7 @@ public class SignUpActivity extends Activity {
                 usersRef.child(username).setValue(user)
                         .addOnSuccessListener(aVoid -> {
                             Toast.makeText(SignUpActivity.this, "Account created successfully", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                            startActivity(new Intent(SignUpActivity.this, SignInActivity.class));
                             finish();
                         })
                         .addOnFailureListener(e -> {
