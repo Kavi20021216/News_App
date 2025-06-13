@@ -33,7 +33,7 @@ public class NewsViewActivity extends AppCompatActivity {
 
         // User profile icon click
         userIcon.setOnClickListener(v -> {
-            Intent intent = new Intent(NewsViewActivity.this, MainActivity.class);
+            Intent intent = new Intent(NewsViewActivity.this, UserProfileActivity.class);
             startActivity(intent);
         });
 
