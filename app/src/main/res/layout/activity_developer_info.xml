@@ -94,7 +94,7 @@
         android:id="@+id/exitButton"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:text="Exit"
+        android:text="EXIT"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
         android:backgroundTint="#D32F2F"

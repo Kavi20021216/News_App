@@ -82,7 +82,7 @@
             android:id="@+id/editProfileButton"
             android:layout_width="140dp"
             android:layout_height="wrap_content"
-            android:text="Edit profile"
+            android:text="EDIT PROFILE"
             android:textAllCaps="false"
             android:backgroundTint="#2C2C2C"
             android:textColor="#FFFFFF"
@@ -92,7 +92,7 @@
             android:id="@+id/signOutButton"
             android:layout_width="140dp"
             android:layout_height="wrap_content"
-            android:text="Sign out"
+            android:text="SIGN OUT"
             android:textAllCaps="false"
             android:backgroundTint="#D32F2F"
             android:textColor="#FFFFFF" />
