@@ -45,6 +45,9 @@ public class SignUpActivity extends Activity {
             } else if (!password.equals(confirmPassword)) {
                 Toast.makeText(SignUpActivity.this, "Passwords don't match", Toast.LENGTH_SHORT).show();
             } else {
+
+               
+
                 User user = new User(username, email, password);
 
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -59,6 +62,7 @@ public class SignUpActivity extends Activity {
                         .addOnFailureListener(e -> {
                             Toast.makeText(SignUpActivity.this, "Failed to create account: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         });
+
             }
         });
 
