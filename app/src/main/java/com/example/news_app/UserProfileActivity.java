@@ -2,7 +2,10 @@ package com.example.news_app;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,12 +13,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.io.IOException;
 
 public class UserProfileActivity extends AppCompatActivity {
 
@@ -23,15 +30,15 @@ public class UserProfileActivity extends AppCompatActivity {
     TextView usernameLabel, emailLabel;
     Button editProfileButton, signOutButton;
 
-    FirebaseUser currentUser;
     DatabaseReference usersRef;
+    String loggedInUsername;
+    private static final int PICK_IMAGE_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        // Bind views
         backButton = findViewById(R.id.backButton);
         profileImage = findViewById(R.id.profileImage);
         usernameLabel = findViewById(R.id.usernameLabel);
@@ -39,34 +46,70 @@ public class UserProfileActivity extends AppCompatActivity {
         editProfileButton = findViewById(R.id.editProfileButton);
         signOutButton = findViewById(R.id.signOutButton);
 
-        // Firebase references
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        loggedInUsername = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
+                .getString("loggedInUsername", null);
 
-        if (currentUser != null) {
-            String uid = currentUser.getUid();
-            usersRef = FirebaseDatabase.getInstance().getReference("users").child(uid);
+        if (loggedInUsername != null) {
+            usersRef = FirebaseDatabase.getInstance().getReference("users").child(loggedInUsername);
 
-            String displayName = currentUser.getDisplayName();
-            String email = currentUser.getEmail();
+            usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        String dbUsername = snapshot.child("username").getValue(String.class);
+                        String dbEmail = snapshot.child("email").getValue(String.class);
 
-            usernameLabel.setText("User Name : " + (displayName != null ? displayName : "Not set"));
-            emailLabel.setText("Email : " + (email != null ? email : "Not available"));
+                        usernameLabel.setText("User Name : " + dbUsername);
+                        emailLabel.setText("Email : " + dbEmail);
+                    } else {
+                        Toast.makeText(UserProfileActivity.this, "User data not found", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    Toast.makeText(UserProfileActivity.this, "Failed to load data", Toast.LENGTH_SHORT).show();
+                }
+            });
+
         } else {
             Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
-            finish(); // Close the activity if no user is logged in
+            finish();
         }
 
-        // Back button
         backButton.setOnClickListener(v -> {
             startActivity(new Intent(UserProfileActivity.this, HomeActivity.class));
             finish();
         });
 
-        // Sign out
+        profileImage.setOnClickListener(v -> chooseImage());
+
         signOutButton.setOnClickListener(v -> showSignOutDialog());
 
-        // Edit profile
         editProfileButton.setOnClickListener(v -> showEditProfileDialog());
+    }
+
+    private void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri imageUri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                profileImage.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void showSignOutDialog() {
@@ -82,7 +125,11 @@ public class UserProfileActivity extends AppCompatActivity {
         Button btnCancel = view.findViewById(R.id.btnCancel);
 
         btnYes.setOnClickListener(v -> {
-            FirebaseAuth.getInstance().signOut();
+            getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
+                    .edit()
+                    .remove("loggedInUsername")
+                    .apply();
+
             Intent intent = new Intent(UserProfileActivity.this, SignInActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -105,7 +152,6 @@ public class UserProfileActivity extends AppCompatActivity {
         Button btnUpdate = view.findViewById(R.id.btnUpdate);
         Button btnCancel = view.findViewById(R.id.btnCancel);
 
-        // Pre-fill with current info
         editUsername.setText(usernameLabel.getText().toString().replace("User Name : ", ""));
         editEmail.setText(emailLabel.getText().toString().replace("Email : ", ""));
 
@@ -118,16 +164,48 @@ public class UserProfileActivity extends AppCompatActivity {
                 return;
             }
 
-            // Update Realtime Database
-            usersRef.child("username").setValue(newUsername);
-            usersRef.child("email").setValue(newEmail);
+            if (newUsername.equals(loggedInUsername)) {
+                usersRef.child("email").setValue(newEmail);
+                emailLabel.setText("Email : " + newEmail);
+                dialog.dismiss();
+                Toast.makeText(this, "Profile Updated", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-            // Reflect changes in UI
-            usernameLabel.setText("User Name : " + newUsername);
-            emailLabel.setText("Email : " + newEmail);
+            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference("users");
 
-            dialog.dismiss();
-            Toast.makeText(this, "Profile Updated", Toast.LENGTH_SHORT).show();
+            usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        rootRef.child(newUsername).setValue(snapshot.getValue())
+                                .addOnSuccessListener(unused -> {
+                                    rootRef.child(newUsername).child("username").setValue(newUsername);
+                                    rootRef.child(newUsername).child("email").setValue(newEmail);
+                                    usersRef.removeValue();
+
+                                    getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
+                                            .edit()
+                                            .putString("loggedInUsername", newUsername)
+                                            .apply();
+
+                                    loggedInUsername = newUsername;
+                                    usersRef = rootRef.child(newUsername);
+
+                                    usernameLabel.setText("User Name : " + newUsername);
+                                    emailLabel.setText("Email : " + newEmail);
+
+                                    dialog.dismiss();
+                                    Toast.makeText(UserProfileActivity.this, "Username & Email Updated", Toast.LENGTH_SHORT).show();
+                                });
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    Toast.makeText(UserProfileActivity.this, "Failed to update username", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
 
         btnCancel.setOnClickListener(v -> dialog.dismiss());

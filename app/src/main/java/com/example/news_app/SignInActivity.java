@@ -12,7 +12,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import com.google.firebase.database.ValueEventListener;
 
 public class SignInActivity extends Activity {
@@ -27,12 +26,11 @@ public class SignInActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
 
-        editUsername = findViewById(R.id.editEmail); // now used as username input
+ 
         editPassword = findViewById(R.id.editPassword);
         btnSignIn = findViewById(R.id.btnSignIn);
         descText = findViewById(R.id.descText);
 
-        // Firebase reference to "users" node
         usersRef = FirebaseDatabase.getInstance().getReference("users");
 
         btnSignIn.setOnClickListener(view -> {
@@ -46,7 +44,6 @@ public class SignInActivity extends Activity {
             }
         });
 
-        // Navigate to SignUpActivity
         descText.setOnClickListener(v -> {
             startActivity(new Intent(SignInActivity.this, SignUpActivity.class));
             finish();
@@ -60,6 +57,8 @@ public class SignInActivity extends Activity {
                 if (snapshot.exists()) {
                     String dbPassword = snapshot.child("password").getValue(String.class);
                     if (dbPassword != null && dbPassword.equals(password)) {
+
+                
                         Toast.makeText(SignInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(SignInActivity.this, HomeActivity.class));
                         finish();
