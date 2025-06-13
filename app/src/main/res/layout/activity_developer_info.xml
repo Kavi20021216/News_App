@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#111111"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <!-- Spacer to move content slightly lower -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="30dp" />
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Developer Information"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="#FF3D3D"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Profile Icon -->
+    <ImageView
+        android:id="@+id/profileIcon"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/user_profile_icon"
+        android:layout_marginBottom="30dp" />
+
+    <!-- Details aligned to left -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="30dp">
+
+        <!-- Name -->
+        <TextView
+            android:id="@+id/nameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:layout_marginBottom="14dp"
+            android:textStyle="normal"
+            android:text="Name : N.A.N.K.R Nishshanka" />
+
+        <!-- Student Number -->
+        <TextView
+            android:id="@+id/studentNumberText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:layout_marginBottom="14dp"
+            android:text="Student Number : 2022T01559" />
+
+        <!-- Personal Statement -->
+        <TextView
+            android:id="@+id/personalStatementText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:layout_marginBottom="14dp"
+            android:lineSpacingExtra="4dp"
+            android:text="Personal statement : UpdateXpress delivers real-time news and breaking updates — fast, reliable, and at your fingertips" />
+
+        <!-- Release Version -->
+        <TextView
+            android:id="@+id/releaseVersionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:layout_marginBottom="14dp"
+            android:text="Release Version : V 1.0.1" />
+    </LinearLayout>
+
+    <!-- Spacer pushes exit button lower -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Exit Button -->
+    <Button
+        android:id="@+id/exitButton"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="Exit"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#D32F2F"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp" />
+</LinearLayout>
